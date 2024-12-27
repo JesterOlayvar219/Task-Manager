@@ -1,0 +1,42 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function isImageFile() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    function isValidFileSize() {
+      return request.resource.size <= 5 * 1024 * 1024; // 5MB max
+    }
+
+    // Profile images
+    match /profileImages/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && 
+                   isOwner(userId) && 
+                   isImageFile() && 
+                   isValidFileSize();
+    }
+
+    // Task attachments
+    match /tasks/{taskId}/{fileName} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isValidFileSize();
+    }
+
+    // Resource files
+    match /resources/{resourceId}/{fileName} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isValidFileSize();
+    }
+  }
+}

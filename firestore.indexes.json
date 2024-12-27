@@ -1,0 +1,23 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "messages",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "channelId", "order": "ASCENDING" },
+        { "fieldPath": "type", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "messages",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "type", "order": "ASCENDING" },
+        { "fieldPath": "participants", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
